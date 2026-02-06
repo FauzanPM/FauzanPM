@@ -18,11 +18,84 @@ body {
 
 /* Hero */
 .hero {
-    text-align: center;
-    padding: 80px 20px;
     background: linear-gradient(135deg, #1e293b, #0f172a);
+    padding: 80px 30px;
     color: white;
 }
+
+.hero-container {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.hero-text {
+    max-width: 520px;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero-text p {
+    font-size: 18px;
+    color: #cbd5f5;
+}
+
+.about-image {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+.about {
+    background: white;
+    padding: 80px 30px;
+}
+
+.about-container {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.about-text h2 {
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.about-text h3 {
+    margin-bottom: 15px;
+}
+
+.about-text p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.about-image img {
+    width: 220px;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
 
 .hero h1 {
     font-size: 40px;
@@ -141,4 +214,21 @@ footer {
     color: white;
     text-align: center;
     padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .hero-container,
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-image img {
+        max-width: 320px;
+    }
+
+    .about-image {
+        width: 180px;
+        height: 180px;
+    }
 }
