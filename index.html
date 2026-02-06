@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h2>Nama Kamu</h2>
+</header>
+
+<section class="hero">
+    <h1>Hi, Saya Nama Kamu</h1>
+    <p>Web Developer | UI Designer</p>
+</section>
+
+<section class="projects">
+    <h2>Projects</h2>
+
+    <div class="project-grid">
+        <!-- Project 1 -->
+        <div class="card">
+            <h3>Project 1</h3>
+            <p>Deskripsi singkat project pertama.</p>
+            <button onclick="openPDF('pdf/project1.pdf')">Preview</button>
+            <a href="pdf/project1.pdf" target="_blank">Buka PDF</a>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="card">
+            <h3>Project 2</h3>
+            <p>Deskripsi singkat project kedua.</p>
+            <button onclick="openPDF('pdf/project2.pdf')">Preview</button>
+            <a href="pdf/project2.pdf" target="_blank">Buka PDF</a>
+        </div>
+    </div>
+</section>
+
+<!-- Modal PDF -->
+<div class="modal" id="pdfModal">
+    <div class="modal-content">
+        <span class="close" onclick="closePDF()">&times;</span>
+        <iframe id="pdfFrame"></iframe>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Nama Kamu</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
