@@ -1,3 +1,6 @@
+/* =====================
+   GLOBAL
+===================== */
 * {
     box-sizing: border-box;
     font-family: 'Segoe UI', sans-serif;
@@ -9,127 +12,156 @@ body {
     color: #333;
 }
 
-/* Navbar */
+/* =====================
+   NAVBAR
+===================== */
 .navbar {
-    padding: 20px 40px;
+    height: 56px;
+    padding: 0 40px;
     background: #0f172a;
     color: white;
+    display: flex;
+    align-items: center;
 }
 
-/* Hero */
+.navbar h2 {
+    font-size: 18px;
+    margin: 0;
+    color: mediumseagreen;
+}
+
+/* =====================
+   HERO (FULL SCREEN)
+===================== */
 .hero {
+    min-height: calc(100vh - 56px);
+    display: flex;
+    align-items: center;
     background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 80px 30px;
-    color: white;
-}
-
-.hero-image img {
-    max-width: 420px;   /* TURUN dari 520px */
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    opacity: 0.9;       /* biar nggak terlalu mencolok */
-}
-
-.hero-image img {
-    max-width: 380px;
-}
-
-.hero {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 60px 30px;   /* sebelumnya 80px */
+    padding: 40px 50px;
     color: white;
 }
 
 .hero-container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: auto;
+    width: 90%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 40px;
+    justify-content: center;
+    gap: 24px;
 }
 
 .hero-text {
+    flex: 1;
     max-width: 520px;
 }
 
 .hero-text h1 {
-    font-size: 48px;
-    margin-bottom: 15px;
+    font-size: 64px;
+    margin-bottom: 20px;
 }
 
 .hero-text p {
-    font-size: 18px;
+    font-size: 24px;
+    line-height: 1.6;
     color: #cbd5f5;
 }
 
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-image img {
+    max-width: 5000px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.9;
+}
+
+.hero-image,
 .about-image {
-    width: 260px;
+    margin-left: -20px;
+}
+/* =====================
+   ABOUT (FULL SCREEN)
+===================== */
+.about {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    padding: 30px 50px;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: auto;
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.about-text {
+    flex: 1;
+    max-width: 560px;
+}
+
+.about-text h2 {
+    font-size: 28px;
+    color: #2563eb;
+    margin-bottom: 45px;
+}
+
+.about-text h3 {
+    font-size: 22px;
+    margin-bottom: 24px;
+}
+
+.about-text p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.about-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .about-image img {
-    width: 100%;
+    width: 300px;
     height: auto;
     object-fit: contain;
 }
 
-.about {
-    padding: 60px 30px; /* dari 80px */
-}
 
-.about-text {
-    max-width: 520px;
-}
-
-
-.about-container {
-    max-width: 1100px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-}
-
-.about-text h2 {
-    color: #2563eb;
-    margin-bottom: 10px;
-}
-
-.about-text h3 {
-    margin-bottom: 15px;
-}
-
-.about-text p {
-    color: #555;
-    line-height: 1.6;
-}
-
-
-
-.hero h1 {
-    font-size: 40px;
-}
-
-/* Projects */
+/* =====================
+   PROJECTS
+===================== */
 .projects {
     max-width: 1100px;
     margin: auto;
-    padding: 60px 30px;
+    padding: 20px 30px 50px;
 }
 
 .projects h2 {
+    font-size: 28px;
     margin-bottom: 30px;
 }
 
 .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 20px;
 }
 
-/* Card */
 .project-card {
     background: white;
     border-radius: 12px;
@@ -144,12 +176,12 @@ body {
 
 .project-card img {
     width: 100%;
-    height: 180px;
+    height: 190px;
     object-fit: cover;
 }
 
 .card-content {
-    padding: 20px;
+    padding: 10px;
 }
 
 .card-content h3 {
@@ -161,7 +193,6 @@ body {
     color: #666;
 }
 
-/* Buttons */
 .card-actions {
     margin-top: 15px;
 }
@@ -187,7 +218,30 @@ body {
     color: #111;
 }
 
-/* Modal */
+.card-actions2 button,
+.card-actions2 a {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.card-actions2 button {
+    background: rgb(219, 194, 1);
+    color: white;
+    margin-right: 8px;
+}
+
+.card-actions2 a {
+    background: #e5e7eb;
+    color: #111;
+}
+
+/* =====================
+   MODAL PDF
+===================== */
 .modal {
     display: none;
     position: fixed;
@@ -219,7 +273,9 @@ body {
     cursor: pointer;
 }
 
-/* Footer */
+/* =====================
+   FOOTER
+===================== */
 footer {
     background: #0f172a;
     color: white;
@@ -227,6 +283,9 @@ footer {
     padding: 20px;
 }
 
+/* =====================
+   RESPONSIVE (MOBILE)
+===================== */
 @media (max-width: 768px) {
     .hero-container,
     .about-container {
@@ -234,12 +293,28 @@ footer {
         text-align: center;
     }
 
+    .hero-image,
+    .about-image {
+        justify-content: center;
+    }
+
     .hero-image img {
         max-width: 260px;
     }
 
-    .about-image {
+    .about-image img {
         width: 200px;
-        margin-top: 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 40px;
+    }
+
+    .hero-text p {
+        font-size: 16px;
+    }
+
+    .cv-preview iframe {
+        height: 380px;
     }
 }
