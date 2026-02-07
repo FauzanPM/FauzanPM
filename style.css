@@ -296,12 +296,16 @@ footer {
 
     .hero-container,
     .about-container {
+        width: 100%;
+        max-width: 100%;
         flex-direction: column;
         text-align: center;
     }
 
     .hero-image,
     .about-image {
+        order: 2;
+        margin-left: 0;
         justify-content: center;
     }
 
@@ -311,6 +315,11 @@ footer {
 
     .about-image img {
         width: 200px;
+    }
+
+    .hero-text,
+    .about-text {
+        order: 1;
     }
 
     .hero-text h1 {
