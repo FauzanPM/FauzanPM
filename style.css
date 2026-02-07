@@ -287,6 +287,13 @@ footer {
    RESPONSIVE (MOBILE)
 ===================== */
 @media (max-width: 768px) {
+    .hero,
+    .about,
+    .cv {
+        min-height: auto;
+        padding: 60px 20px;
+    }
+
     .hero-container,
     .about-container {
         flex-direction: column;
