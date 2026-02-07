@@ -2,80 +2,231 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fauzan Prima Mukti - DevOps Engineer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav class="navbar">
     <h2>FauzanPM</h2>
+    <div class="nav-links">
+        <a href="#hero">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+    </div>
 </nav>
 
-<section class="hero">
+<section class="hero" id="hero">
     <div class="hero-container">
         <div class="hero-text">
-            <h1>DevOps<br> &nbsp;&nbsp; Engineer</h1>
-            <p>Automation deployment, CI/CD,<br> & cloud infrastructure</p>
+            <div class="greeting">👋 Hello, I'm</div>
+            <h1>Fauzan Prima Mukti</h1>
+            <div class="role-container">
+                <span class="role-label">DevOps Engineer</span>
+            </div>
+            <p>Specializing in automation, CI/CD pipelines, and cloud infrastructure to build scalable and reliable systems</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn-primary">View Projects</a>
+                <button onclick="openPDF('pdf/cv.pdf')" class="btn-secondary">Download CV</button>
+            </div>
         </div>
         <div class="hero-image">
-            <img src="img/hero.png" alt="DevOps Illustration">
+            <div class="image-wrapper">
+                <img src="img/hero.png" alt="DevOps Illustration">
+                <div class="floating-badge badge-1">☁️ Cloud</div>
+                <div class="floating-badge badge-2">🔄 CI/CD</div>
+                <div class="floating-badge badge-3">🚀 Deploy</div>
+            </div>
         </div>
+    </div>
+    <div class="scroll-indicator">
+        <span>Scroll Down</span>
+        <div class="mouse"></div>
     </div>
 </section>
 
-<section class="about">
+<section class="about" id="about">
     <div class="about-container">
-        <div class="about-text">
-            <h2>About Me</h2>
-            <h3>Fauzan Prima Mukti</h3>
-            <p>
-                I am a DevOps Engineer with a focus on cloud 
-                infrastructure implementation, automation deployment, CI/CD pipelines, 
-                and monitoring systems for small to medium-sized applications.
-            </p>
-                <div class="card-actions2">
-                    <button onclick="openPDF('pdf/cv.pdf')">Preview CV</button>
-                </div>
-        </div>
-
         <div class="about-image">
-            <img src="img/profil.png" alt="Fauzan Profile">
+            <div class="profile-wrapper">
+                <img src="img/profil.png" alt="Fauzan Profile">
+                <div class="profile-ring"></div>
+            </div>
+        </div>
+        
+        <div class="about-text">
+            <div class="section-label">Get to know me</div>
+            <h2>About Me</h2>
+            <p>
+                I'm a passionate DevOps Engineer focused on bridging the gap between development 
+                and operations. With expertise in cloud infrastructure, automation, and continuous 
+                delivery, I help teams ship better software faster.
+            </p>
+            <p>
+                My approach combines technical excellence with practical problem-solving, 
+                ensuring that infrastructure is not just functional, but also scalable, 
+                secure, and cost-effective.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2+</div>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">9+</div>
+                    <div class="stat-label">Technologies</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-
-<section class="projects">
-    <h2>My Projects</h2>
-
-    <div class="project-grid">
-
-        <!-- Project 1 -->
-        <div class="project-card">
-            <img src="img/project1.png" alt="Project 1">
-            <div class="card-content">
-                <h3>DumbMerch</h3>
-                <p>Implementasi infrastruktur end-to-end untuk platform E-Commerce</p>
-                <div class="card-actions">
-                    <button onclick="openPDF('pdf/project1.pdf')">Preview</button>
-                    <a href="pdf/project1.pdf" target="_blank">PDF</a>
+<section class="skills" id="skills">
+    <div class="skills-container">
+        <div class="section-label">What I work with</div>
+        <h2>Skills & Technologies</h2>
+        
+        <div class="skills-grid">
+            <div class="skill-category">
+                <div class="category-icon">☁️</div>
+                <h3>Cloud Platforms</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">AWS</span>
+                    <span class="skill-tag">Google Cloud</span>
+                    <span class="skill-tag">Azure</span>
+                </div>
+            </div>
+            
+            <div class="skill-category">
+                <div class="category-icon">🐳</div>
+                <h3>Containerization</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">Kubernetes</span>
+                    <span class="skill-tag">Helm</span>
+                </div>
+            </div>
+            
+            <div class="skill-category">
+                <div class="category-icon">🔄</div>
+                <h3>CI/CD</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Jenkins</span>
+                    <span class="skill-tag">GitLab CI</span>
+                    <span class="skill-tag">GitHub Actions</span>
+                </div>
+            </div>
+            
+            <div class="skill-category">
+                <div class="category-icon">⚙️</div>
+                <h3>Infrastructure as Code</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Terraform</span>
+                    <span class="skill-tag">Ansible</span>
+                    <span class="skill-tag">CloudFormation</span>
+                </div>
+            </div>
+            
+            <div class="skill-category">
+                <div class="category-icon">📊</div>
+                <h3>Monitoring</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Prometheus</span>
+                    <span class="skill-tag">Grafana</span>
+                    <span class="skill-tag">ELK Stack</span>
+                </div>
+            </div>
+            
+            <div class="skill-category">
+                <div class="category-icon">💻</div>
+                <h3>Scripting</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Bash</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Go</span>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <!-- Project 2 -->
-        <div class="project-card">
-            <img src="img/project2.png" alt="Project 2">
-            <div class="card-content">
-                <h3>WaysHub</h3>
-                <p>Implementasi Infrastruktur Hybrid platform video streaming</p>
-                <div class="card-actions">
-                    <button onclick="openPDF('pdf/project2.pdf')">Preview</button>
-                    <a href="pdf/project2.pdf" target="_blank">PDF</a>
+<section class="projects" id="projects">
+    <div class="projects-container">
+        <div class="section-label">My work</div>
+        <h2>Featured Projects</h2>
+
+        <div class="project-grid">
+            <!-- Project 1 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="img/project1.png" alt="DumbMerch Project">
+                    <div class="project-overlay">
+                        <div class="overlay-content">
+                            <p>End-to-end infrastructure implementation for E-Commerce platform</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="project-header">
+                        <h3>DumbMerch</h3>
+                        <span class="project-badge">E-Commerce</span>
+                    </div>
+                    <p>Complete infrastructure setup with automated deployment, monitoring, and scaling capabilities for a modern e-commerce platform.</p>
+                    <div class="tech-stack">
+                        <span class="tech-item">Docker</span>
+                        <span class="tech-item">AWS</span>
+                        <span class="tech-item">Jenkins</span>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="openPDF('pdf/project1.pdf')" class="btn-preview">
+                            <span>👁️</span> Preview
+                        </button>
+                        <a href="pdf/project1.pdf" target="_blank" class="btn-download">
+                            <span>📄</span> PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="img/project2.png" alt="WaysHub Project">
+                    <div class="project-overlay">
+                        <div class="overlay-content">
+                            <p>Hybrid infrastructure for video streaming platform</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="project-header">
+                        <h3>WaysHub</h3>
+                        <span class="project-badge">Streaming</span>
+                    </div>
+                    <p>Hybrid cloud infrastructure implementation ensuring high availability and optimal performance for video streaming services.</p>
+                    <div class="tech-stack">
+                        <span class="tech-item">Kubernetes</span>
+                        <span class="tech-item">GCP</span>
+                        <span class="tech-item">Terraform</span>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="openPDF('pdf/project2.pdf')" class="btn-preview">
+                            <span>👁️</span> Preview
+                        </button>
+                        <a href="pdf/project2.pdf" target="_blank" class="btn-download">
+                            <span>📄</span> PDF
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -88,9 +239,25 @@
 </div>
 
 <footer>
-    <a href="https://github.com/FauzanPM/automation" target="_blank">Github </a>
-    <span>  |  </span>
-     <a href="https://www.linkedin.com/in/fauzanprimamukti/" target="_blank">Linkedin</a>
+    <div class="footer-content">
+        <div class="footer-text">
+            <h3>Let's Connect</h3>
+            <p>Feel free to reach out for collaborations or just a friendly chat</p>
+        </div>
+        <div class="social-links">
+            <a href="https://github.com/FauzanPM/automation" target="_blank" class="social-link">
+                <span class="social-icon">💻</span>
+                <span>GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/fauzanprimamukti/" target="_blank" class="social-link">
+                <span class="social-icon">💼</span>
+                <span>LinkedIn</span>
+            </a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Fauzan Prima Mukti. Built with passion ❤️</p>
+        </div>
+    </div>
 </footer>
 
 <script src="script.js"></script>
