@@ -641,6 +641,18 @@ body {
     border-radius: 50px;
     font-size: 12px;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.project-header a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.project-header a:hover .project-badge {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .card-content p {
