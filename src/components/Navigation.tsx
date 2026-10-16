@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, Command, Menu, X } from 'lucide-react';
 import { BrandMark } from './BrandIcons';
+import { ThemeToggle } from './ThemeToggle';
 
 const links = [
   { id: 'work', label: 'Selected work' },
@@ -67,6 +68,7 @@ export function Navigation({ openCommands }: { openCommands: () => void }) {
           </a>
         </nav>
         <div className="nav-actions">
+          <ThemeToggle />
           <button className="command-trigger" onClick={openCommands} aria-label="Open command menu">
             <Command size={14} />
             <span>K</span>

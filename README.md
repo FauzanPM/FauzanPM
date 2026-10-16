@@ -25,7 +25,9 @@ Jalankan `npm run build` sebelum `npm test`. Playwright menjalankan server previ
 
 ## Pengalaman interaktif
 
-- Visual jaringan dengan proyeksi 3D, tiga lapisan tematik, respons pointer, dan kontrol jeda.
+- Globe dengan proyeksi 3D, respons arah kursor, drag dua sumbu, momentum, serta kontrol jeda/reset. Di ponsel, geser horizontal untuk memutar dan vertikal untuk scroll halaman; keyboard mendukung panah serta Home.
+- Delapan node tools ikut berputar bersama globe. Klik untuk membaca fungsi, penggunaan dalam workflow, dan dokumentasi resmi. Rotasi berhenti saat node disorot, difokuskan melalui keyboard, atau panel deskripsi dibaca.
+- Light/dark mode dengan animasi lingkaran yang menyebar dari tombol tema. Pilihan tersimpan antar kunjungan; browser tanpa View Transitions memakai gelombang dan transisi warna, sedangkan reduced motion menonaktifkan animasi.
 - Filter proyek dan studi kasus yang terhubung ke repositori serta dokumentasi PDF asli.
 - Panel keahlian dengan navigasi tab melalui keyboard.
 - Simulasi pipeline dengan tahap commit, build, verify, deploy, dan observe. Kegagalan verifikasi menghentikan simulasi sebelum deployment; simulasi tidak menjalankan deployment sungguhan.
@@ -42,31 +44,40 @@ src/
 │   ├── Dialog.tsx            Siklus modal, scroll lock, dan fokus
 │   ├── CommandPalette.tsx    Pencarian serta navigasi keyboard
 │   ├── PipelineLab.tsx       Antarmuka simulasi delivery
+│   ├── ThemeToggle.tsx       Tema persisten dan transisi radial
 │   └── SystemScene.tsx       Adapter React untuk visualisasi
-├── data/portfolio.ts         Konten bertipe: profil, proyek, keahlian, pengalaman
+├── data/
+│   ├── portfolio.ts          Konten bertipe: profil, proyek, keahlian, pengalaman
+│   └── technologies.ts       Posisi node, fungsi tools, penggunaan, dan dokumentasi
 ├── hooks/                    Preferensi gerak sistem
 ├── lib/
 │   ├── assets.ts             Resolusi aset sesuai base path deployment
 │   ├── network-scene.ts      Renderer Canvas dan manajemen resource
+│   ├── scene-math.ts         Rotasi quaternion dan proyeksi koordinat bersama
 │   └── pipeline.ts           Reducer deterministik untuk alur simulasi
-└── styles.css                Token desain, cascade layers, dan breakpoint
+├── styles.css                Token desain, cascade layers, dan breakpoint
+└── theme.css                 Palet terang dan animasi perpindahan tema
 public/
 ├── img/                      Gambar asli
 └── pdf/                      CV dan dokumentasi proyek asli
-tests/portfolio.spec.ts       Tes perilaku dan pemeriksaan aksesibilitas
+tests/                       Tes halaman, interaksi globe, tema, dan aksesibilitas
 ```
 
 Konten dipisahkan dari tampilan. Satu discriminated union mengelola overlay sehingga command palette, studi kasus, dan résumé tidak terbuka bersamaan. Reducer pipeline memisahkan transisi proses dari waktu dan tampilan.
 
 Renderer visualisasi dimuat melalui lazy import. Ukuran canvas mengikuti container dengan pixel ratio maksimal 2. Render berkelanjutan berhenti ketika visualisasi tidak terlihat, tab browser tersembunyi, pengguna menjeda, atau reduced motion aktif. Observer, timer, dan event listener dibersihkan saat komponen dilepas. Font di-host bersama aplikasi; halaman tidak membutuhkan CDN font.
 
+Canvas dan tombol tools menggunakan transformasi quaternion yang sama, sehingga orientasi bertahan saat lapisan atau tema berubah. Tombol tetap berupa elemen HTML untuk fokus keyboard dan pembaca layar. Tema dipulihkan sebelum halaman digambar untuk menghindari kilatan palet yang salah saat reload.
+
 ## Memperbarui konten
 
 Ubah `src/data/portfolio.ts` untuk informasi profil, proyek, keahlian, dan pengalaman. Materi awal bersumber dari situs serta CV yang sudah ada. Letakkan aset publik di `public/`; gunakan `assetUrl()` agar tautan mengikuti base path deployment. Diagram proyek merupakan ilustrasi konseptual, bukan dashboard produksi.
 
+Ubah `src/data/technologies.ts` untuk node tools, deskripsi penggunaan, tautan dokumentasi, dan posisi awal dalam ruang 3D.
+
 ## Validasi
 
-Suite Playwright menjalankan skenario yang sama di desktop dan emulasi mobile: aset/PDF, navigasi, filter proyek, dialog dan fokus, unduhan résumé, command palette, keyboard tabs, kontrol animasi, clipboard, lebar layar kecil, serta keberhasilan dan kegagalan pipeline. Axe memeriksa aturan WCAG A/AA pada halaman dan command palette. Pemeriksaan otomatis ini tidak menggantikan evaluasi manual menggunakan pembaca layar dan perangkat nyata.
+Suite Playwright mencakup desktop dan emulasi mobile: aset/PDF, navigasi, filter proyek, dialog dan fokus, unduhan résumé, command palette, keyboard tabs, clipboard, lebar layar kecil, serta keberhasilan dan kegagalan pipeline. Tes globe memeriksa drag mouse, gesture sentuh, proyeksi node, jeda/reset, reduced motion, dan deskripsi tools. Tes tema memeriksa animasi radial, fallback, persistensi, serta storage yang tidak tersedia. Axe memeriksa aturan WCAG A/AA pada halaman dan dialog dalam kedua tema. Pemeriksaan otomatis ini tidak menggantikan evaluasi manual menggunakan pembaca layar dan perangkat nyata.
 
 CI menjalankan instalasi berdasarkan lockfile, pemeriksaan format, build, dan tes browser. Laporan serta trace kegagalan tersedia sebagai artifact workflow.
 

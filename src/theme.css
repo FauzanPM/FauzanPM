@@ -1,0 +1,583 @@
+/* Shared by the canvas renderer and the HTML tool satellites. */
+:root {
+  --network-rgb: 184, 247, 179;
+  --network-line-alpha: 0.26;
+  --orbital-surface: #101a14ed;
+  --orbital-border: #3c5145;
+  --orbital-text: #edf0e9;
+  --orbital-muted: #a2b0a5;
+  --orbital-accent: #b8f7b3;
+  --theme-wave-color: #416d4c;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f6ee;
+  --surface: #fcfdf8;
+  --surface-raised: #e8eee2;
+  --text: #1b3026;
+  --muted: #526258;
+  --subtle: #586b5c;
+  --mint: #286b43;
+  --line: #cbd6c8;
+  --line-soft: #dce3d6;
+  --network-rgb: 39, 107, 73;
+  --network-line-alpha: 0.4;
+  --orbital-surface: #fbfdf5f2;
+  --orbital-border: #a7bca8;
+  --orbital-text: #203d2e;
+  --orbital-muted: #4e6756;
+  --orbital-accent: #286b43;
+  --theme-wave-color: #d1e9a6;
+}
+
+/* The control is a small orbital instrument, shared by both palettes. */
+.theme-toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--mint);
+  background: var(--surface);
+  transition:
+    border-color 200ms,
+    background-color 200ms,
+    box-shadow 300ms;
+}
+
+.theme-toggle:hover {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--mint) 7%, transparent);
+}
+
+.theme-toggle-orbit {
+  position: absolute;
+  inset: -5px;
+  border: 1px solid transparent;
+  border-top-color: color-mix(in srgb, var(--mint) 45%, transparent);
+  border-radius: 50%;
+  transform: rotate(-38deg);
+  transition: transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.theme-toggle-orbit::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--mint);
+}
+
+.theme-toggle:hover .theme-toggle-orbit {
+  transform: rotate(140deg);
+}
+
+.theme-toggle[data-changing] .theme-toggle-orbit {
+  transform: rotate(320deg);
+}
+
+.theme-toggle-icons {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.theme-toggle-icons > svg {
+  position: absolute;
+  transition:
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms;
+}
+
+.theme-moon {
+  opacity: 0;
+  transform: rotate(-75deg) scale(0.4);
+}
+
+:root[data-theme='light'] .theme-sun {
+  opacity: 0;
+  transform: rotate(100deg) scale(0.4);
+}
+
+:root[data-theme='light'] .theme-moon {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+.theme-toggle-caption {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 12px);
+  z-index: 1;
+  transform: translate(-50%, -3px);
+  opacity: 0;
+  visibility: hidden;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font: 8px var(--mono);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  transition:
+    opacity 160ms,
+    transform 160ms,
+    visibility 160ms;
+}
+
+.theme-toggle:is(:hover, :focus-visible) .theme-toggle-caption {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav-actions {
+  gap: 22px;
+}
+
+.main-nav {
+  margin-left: 38px;
+}
+
+/* Preserve the outgoing page while the new palette opens from the control. */
+:root[data-theme-transition='radial'],
+:root[data-theme-transition='radial'] *,
+:root[data-theme-transition='radial'] *::before,
+:root[data-theme-transition='radial'] *::after {
+  /* The snapshot must capture the final palette, not intermediate hover colors. */
+  transition: none !important;
+}
+
+:root[data-theme-transition='radial']::view-transition-old(root),
+:root[data-theme-transition='radial']::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-transition='radial']::view-transition-old(root) {
+  z-index: 1;
+}
+
+:root[data-theme-transition='radial']::view-transition-new(root) {
+  z-index: 2;
+}
+
+:root[data-theme-transition='radial']::view-transition {
+  pointer-events: none;
+}
+
+:root[data-theme-transition='fallback'],
+:root[data-theme-transition='fallback'] *,
+:root[data-theme-transition='fallback'] *::before,
+:root[data-theme-transition='fallback'] *::after {
+  transition:
+    background-color 700ms ease,
+    color 700ms ease,
+    border-color 700ms ease,
+    box-shadow 700ms ease,
+    fill 700ms ease,
+    stroke 700ms ease !important;
+}
+
+.theme-wave {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.theme-wave::before {
+  content: '';
+  position: absolute;
+  left: var(--theme-origin-x);
+  top: var(--theme-origin-y);
+  width: calc(var(--theme-radius) * 2);
+  height: calc(var(--theme-radius) * 2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    transparent 38%,
+    color-mix(in srgb, var(--theme-wave-color) 20%, transparent) 65%,
+    color-mix(in srgb, var(--theme-wave-color) 40%, transparent) 90%,
+    transparent 100%
+  );
+  animation: theme-wave 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes theme-wave {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.9;
+  }
+  65% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* Daylight is warm paper, forest ink, and translucent sage surfaces. */
+:root[data-theme='light'] .site-header {
+  background: #f5f6eeed;
+}
+
+:root[data-theme='light'] :is(.button-primary, .contact-circle:hover) {
+  background: var(--mint);
+  border-color: var(--mint);
+  color: #fff;
+}
+
+:root[data-theme='light'] .button-primary:hover {
+  background: #1e5735;
+  border-color: #1e5735;
+}
+
+:root[data-theme='light'] :is(.button-quiet, .main-nav > a, .hero-eyebrow, .hero-location) {
+  color: #405747;
+}
+
+:root[data-theme='light']
+  :is(.button-quiet:hover, .main-nav > a:hover, .main-nav > a[aria-current]) {
+  color: var(--mint);
+}
+
+:root[data-theme='light'] :is(.button-outline, .command-trigger, .scroll-icon) {
+  border-color: #a9bca8;
+}
+
+:root[data-theme='light'] .button-outline:hover {
+  background: #e3ecd9;
+  border-color: var(--mint);
+}
+
+:root[data-theme='light']
+  :is(
+    .hero-description,
+    .scene-coordinate,
+    .node-tag,
+    .technology-logos,
+    .toolkit-note,
+    .capability-tools > span,
+    .philosophy-banner > p,
+    .about-copy > p,
+    .experience-date,
+    .footer-socials
+  ) {
+  color: var(--muted);
+}
+
+:root[data-theme='light'] .eyebrow-divider {
+  color: #7b917f;
+}
+
+:root[data-theme='light'] .scene-mode-1 {
+  --scene-accent: #72539c;
+}
+
+:root[data-theme='light'] .scene-mode-2 {
+  --scene-accent: #216b84;
+}
+
+:root[data-theme='light'] .scene-grid {
+  background-image:
+    linear-gradient(#6b946c20 1px, transparent 1px),
+    linear-gradient(90deg, #6b946c20 1px, transparent 1px);
+}
+
+:root[data-theme='light'] .scene-node {
+  background: var(--orbital-surface);
+  border-color: var(--orbital-border);
+  box-shadow: 0 8px 30px #304d3310;
+}
+
+:root[data-theme='light'] :is(.node-icon, .scene-tabs button[aria-pressed='true']) {
+  border-color: #a8bda9;
+  background: #e7eee0;
+}
+
+:root[data-theme='light'] .scene-loading span {
+  border-color: #7c9b7f70;
+}
+
+:root[data-theme='light'] .filter-list button[aria-pressed='true'] {
+  border-color: #afc2aa;
+  background: #e4ecdd;
+}
+
+:root[data-theme='light'] .project-visual {
+  --diagram-color: #306e43;
+  border-color: #b8ccb3;
+  background-color: #e8efdf;
+  background-image:
+    radial-gradient(ellipse at 50% 45%, #c1dd9e55, transparent 70%),
+    linear-gradient(#526e5910 1px, transparent 1px),
+    linear-gradient(90deg, #526e5910 1px, transparent 1px);
+}
+
+:root[data-theme='light'] .visual-lavender {
+  --diagram-color: #6d4d92;
+  border-color: #d0c4df;
+  background-color: #eeebf4;
+  background-image:
+    radial-gradient(ellipse at 50% 45%, #dbcaed55, transparent 70%),
+    linear-gradient(#78648c12 1px, transparent 1px),
+    linear-gradient(90deg, #78648c12 1px, transparent 1px);
+}
+
+:root[data-theme='light'] :is(.diagram-source, .diagram-targets > div) {
+  background: #ffffffa3;
+}
+
+:root[data-theme='light'] .diagram-hub {
+  background: #f7faef;
+  box-shadow:
+    0 12px 30px #3d5e3112,
+    inset 0 1px 0 #ffffffa6;
+}
+
+:root[data-theme='light'] .visual-lavender .diagram-hub {
+  background: #f9f6fc;
+}
+
+:root[data-theme='light'] :is(.diagram-bottom, .diagram-hub > small) {
+  color: color-mix(in srgb, var(--diagram-color) 85%, #21291f);
+}
+
+:root[data-theme='light'] .project-tags > span {
+  color: var(--muted);
+  border-color: #c7d3bf;
+  background: #edf1e8;
+}
+
+:root[data-theme='light'] .work-github > span {
+  color: var(--text);
+}
+
+:root[data-theme='light'] .capability-icon {
+  border-color: #bdd0b8;
+  background: #e8f0e0;
+}
+
+:root[data-theme='light'] .code-panel {
+  border-color: #cdd9c6;
+  background: #edf2e5;
+}
+
+:root[data-theme='light'] :is(.code-header, .code-footer) {
+  border-color: #d3ddcb;
+  color: #526b52;
+}
+
+:root[data-theme='light'] .code-panel pre {
+  color: #3b6442;
+}
+
+:root[data-theme='light'] .code-header i {
+  background: #97ae8d;
+}
+
+:root[data-theme='light'] .code-header i:first-child {
+  background: #5d8859;
+}
+
+:root[data-theme='light'] .about-portrait {
+  background: #dfe9d8;
+  border-color: #c3d0bc;
+}
+
+:root[data-theme='light'] .about-portrait::after {
+  background: linear-gradient(transparent 37%, #edf3e5f5 86%);
+}
+
+:root[data-theme='light'] :is(.portrait-name > .mono, .portrait-name > span:last-child) {
+  color: #3d5a40;
+}
+
+:root[data-theme='light'] .portrait-arrow {
+  color: #3d5a40;
+}
+
+:root[data-theme='light'] .contact-section {
+  border-color: #b4c9a8;
+  background: #e3edd8;
+}
+
+:root[data-theme='light'] .contact-section .section-kicker {
+  color: #46623e;
+}
+
+:root[data-theme='light'] .contact-orbit {
+  border-color: #6a8f4e24;
+  box-shadow:
+    0 0 0 50px #6a8f4e06,
+    0 0 0 100px #6a8f4e06,
+    0 0 0 150px #6a8f4e06;
+}
+
+:root[data-theme='light'] .contact-circle {
+  border-color: #9bb58c;
+}
+
+:root[data-theme='light'] :is(.contact-bottom > p, .contact-email > .icon-button) {
+  color: #4d6244;
+}
+
+:root[data-theme='light'] .contact-email > a {
+  color: #234e30;
+  border-color: #9fb891;
+}
+
+:root[data-theme='light'] .dialog {
+  border-color: #b7c7ae;
+  box-shadow: 0 30px 140px #1b382b33;
+}
+
+:root[data-theme='light'] .dialog::backdrop {
+  background: #66795f60;
+}
+
+:root[data-theme='light'] .cv-dialog iframe {
+  background: #edf1e8;
+}
+
+:root[data-theme='light'] .command-option > span {
+  color: var(--text);
+}
+
+:root[data-theme='light'] .command-option.is-selected {
+  background: #e2ecd8;
+}
+
+:root[data-theme='light'] .command-option.is-selected > span {
+  color: #245b31;
+}
+
+:root[data-theme='light'] .pipeline-lab {
+  background: #eef3e7;
+}
+
+:root[data-theme='light']
+  :is(
+    .pipeline-heading > div > .mono,
+    .simulation-badge,
+    .stage-status,
+    .pipeline-description p,
+    .failure-control,
+    .pipeline-status
+  ) {
+  color: #50664c;
+}
+
+:root[data-theme='light'] .simulation-badge {
+  border-color: #b9ccb0;
+  background: #f7faef;
+}
+
+:root[data-theme='light'] .pipeline-stages::before {
+  background: #afc4a3;
+}
+
+:root[data-theme='light'] .stage-icon {
+  color: #526a4c;
+  border-color: #b3c6a8;
+  background: #f5f8ed;
+}
+
+:root[data-theme='light'] .stage-name {
+  color: #2e482f;
+}
+
+:root[data-theme='light'] .stage-complete .stage-icon {
+  color: #286b43;
+  border-color: #77a16d;
+  background: #dfedd3;
+}
+
+:root[data-theme='light'] .stage-active .stage-icon {
+  color: #286b43;
+  border-color: #286b43;
+  box-shadow: 0 0 24px #5e963e14;
+}
+
+:root[data-theme='light'] .stage-failed .stage-icon {
+  color: #9c3e2c;
+  border-color: #b47b66;
+  background: #f8e6da;
+}
+
+:root[data-theme='light'] :is(.stage-failed .stage-status, .pipeline-failed .pipeline-status) {
+  color: #9c3e2c;
+}
+
+:root[data-theme='light'] :is(.stage-complete .stage-status, .pipeline-success .pipeline-status) {
+  color: #286b43;
+}
+
+:root[data-theme='light'] .pipeline-description {
+  background: #f8fbf1;
+  border-color: #c4d5b9;
+}
+
+@media (max-width: 900px) {
+  .main-nav {
+    margin-left: 0;
+    gap: 18px;
+  }
+  .nav-actions {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 680px) {
+  .nav-actions {
+    gap: 14px;
+  }
+  .theme-toggle {
+    width: 34px;
+    height: 34px;
+  }
+  :root[data-theme='light'] .main-nav {
+    background: #f5f6eef5;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-actions {
+    gap: 10px;
+  }
+  .nav-shell {
+    gap: 10px;
+  }
+  .brand {
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-wave {
+    display: none;
+  }
+  .theme-toggle,
+  .theme-toggle *,
+  :root[data-theme-transition='fallback'],
+  :root[data-theme-transition='fallback'] *,
+  :root[data-theme-transition='fallback'] *::before,
+  :root[data-theme-transition='fallback'] *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

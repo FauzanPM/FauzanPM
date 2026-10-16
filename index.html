@@ -4,6 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#080d0b" />
+    <script>
+      (() => {
+        let theme = 'dark';
+        try {
+          if (localStorage.getItem('fauzanpm-theme') === 'light') theme = 'light';
+        } catch {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.documentElement.style.backgroundColor = theme === 'light' ? '#f5f6ee' : '#080d0b';
+        document.querySelector('meta[name="theme-color"]').content =
+          theme === 'light' ? '#f5f6ee' : '#080d0b';
+      })();
+    </script>
     <meta
       name="description"
       content="Fauzan Prima Mukti — DevOps engineer building thoughtful infrastructure, automated delivery pipelines, and observable systems. Based in Batam, Indonesia."
