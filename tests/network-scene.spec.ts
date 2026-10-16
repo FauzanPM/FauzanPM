@@ -70,6 +70,67 @@ test('opens a rotating tool by click and restores its focus after inspection', a
   await expect(docker).toBeFocused();
 });
 
+test('clips rear tools behind the globe and reveals them again as they orbit forward', async ({
+  page,
+}) => {
+  const orbit = await openGlobe(page);
+  const anchor = page.locator('[data-tool-id="docker"]');
+  const tool = page.getByRole('button', { name: 'Explore Docker', exact: true });
+  await orbit.focus();
+  const stages = new Set<string>();
+  let hidden = false;
+  let returned = false;
+  for (let step = 0; step < 40; step++) {
+    const state = (await anchor.getAttribute('data-occlusion'))!;
+    stages.add(state);
+    if (state === 'full' && !hidden) {
+      hidden = true;
+      const bounds = (await tool.boundingBox())!;
+      const point = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+      expect(
+        await page.evaluate(
+          ({ x, y }) => !!document.elementFromPoint(x, y)?.closest('.orbital-tool'),
+          point,
+        ),
+      ).toBe(false);
+      await page.mouse.click(point.x, point.y);
+      await expect(page.locator('.scene-inspector')).toHaveCount(0);
+      await orbit.focus();
+    } else if (hidden && state === 'none') {
+      returned = true;
+      break;
+    }
+    await orbit.press('ArrowRight');
+    await page.clock.runFor(32);
+  }
+  expect([...stages]).toEqual(expect.arrayContaining(['none', 'partial', 'full']));
+  expect(returned).toBe(true);
+  await tool.click();
+  await expect(page.getByRole('region', { name: 'Docker details', exact: true })).toBeVisible();
+});
+
+test('brings an occluded tool forward for keyboard exploration', async ({ page }) => {
+  await openGlobe(page);
+  const anchor = page.locator('.orbital-tool-anchor[data-occlusion="full"]').first();
+  const id = (await anchor.getAttribute('data-tool-id'))!;
+  const stableAnchor = page.locator(`[data-tool-id="${id}"]`);
+  const tool = stableAnchor.getByRole('button');
+  const name = (await tool.getAttribute('aria-label'))!.replace('Explore ', '');
+  await tool.focus();
+  await page.clock.runFor(32);
+  await expect(stableAnchor).toHaveAttribute('data-occlusion', 'none');
+  await expect(tool).toBeFocused();
+  const bounds = (await tool.boundingBox())!;
+  expect(
+    await page.evaluate(
+      ({ x, y }) => document.elementFromPoint(x, y)?.closest('button')?.getAttribute('aria-label'),
+      { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 },
+    ),
+  ).toBe(`Explore ${name}`);
+  await tool.press('Enter');
+  await expect(page.getByRole('region', { name: `${name} details`, exact: true })).toBeVisible();
+});
+
 test('makes every orbiting technology and its documentation available by keyboard', async ({
   page,
 }) => {

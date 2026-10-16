@@ -113,6 +113,10 @@ export function ThemeToggle() {
         if (!committed) commit();
         transition.skipTransition();
       } finally {
+        // Keep the custom pseudo-element styles and filled animation alive
+        // until the browser has removed its snapshots. Earlier cleanup can
+        // restart the default crossfade or expose the unclipped page for a frame.
+        await transition.finished.catch(() => {});
         animation?.cancel();
         finish();
       }

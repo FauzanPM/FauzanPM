@@ -171,6 +171,7 @@
 
 :root[data-theme-transition='radial']::view-transition-new(root) {
   z-index: 2;
+  clip-path: circle(0 at var(--theme-origin-x) var(--theme-origin-y));
 }
 
 :root[data-theme-transition='radial']::view-transition {

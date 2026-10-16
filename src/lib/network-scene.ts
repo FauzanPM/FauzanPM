@@ -26,6 +26,12 @@ export function createNetworkScene(
   const context = canvas.getContext('2d');
   if (!context) return { update() {}, reset() {}, dispose() {} };
   const ctx = context;
+  const satellites = nodes.map((node) => ({
+    ...node,
+    button: node.element.querySelector<HTMLButtonElement>('button')!,
+    width: 0,
+    height: 0,
+  }));
   let options = initialOptions;
   let width = 0,
     height = 0,
@@ -86,7 +92,8 @@ export function createNetworkScene(
     const focused = document.activeElement;
     const keyboardHeld =
       !!focused && surface.contains(focused) && focused.matches(':focus-visible');
-    const held = options.engaged || hoverHeld || keyboardHeld;
+    const themeChanging = document.documentElement.hasAttribute('data-theme-transition');
+    const held = options.engaged || hoverHeld || keyboardHeld || themeChanging;
     const animate =
       !options.paused && !options.reducedMotion && !held && !drag && visible && !document.hidden;
     if (animate) {
@@ -106,6 +113,8 @@ export function createNetworkScene(
     );
     const matrix = rotationMatrix(camera);
     const radius = Math.min(width * 0.285, height * 0.315);
+    // The perspective silhouette is slightly wider than the sphere's equator.
+    const silhouette = radius / Math.sqrt(1 - (0.32 / 3.8) ** 2);
     ctx.clearRect(0, 0, width, height);
     const glow = ctx.createRadialGradient(
       width / 2,
@@ -165,17 +174,48 @@ export function createNetworkScene(
       ctx.arc(p.x, p.y, (0.6 + front * 0.75) * (index % 47 === 0 ? 1.7 : 1), 0, TAU);
       ctx.fill();
     }
-    for (const node of nodes) {
+    for (const node of satellites) {
       const p = project(node.position, radius * 1.22, matrix);
       const inside = project(node.position, radius * 0.88, matrix);
       const x = Math.max(48, Math.min(width - 48, p.x));
       const y = Math.max(35, Math.min(height - 44, p.y));
       const depth = Math.max(0, Math.min(1, (p.z + 1.2) / 2.4));
+      const scale = 0.88 + depth * 0.12;
       node.element.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       node.element.style.zIndex = String(3 + Math.round(depth * 9));
-      node.element.style.setProperty('--node-scale', String(0.88 + depth * 0.12));
+      node.element.style.setProperty('--node-scale', String(scale));
       node.element.dataset.activeLayer = String(node.layer === options.mode);
       node.element.dataset.depth = depth > 0.5 ? 'front' : 'rear';
+      const halfWidth = (node.width * scale) / 2;
+      const halfHeight = (node.height * scale) / 2;
+      const distanceX = Math.abs(x - width / 2);
+      const distanceY = Math.abs(y - height / 2);
+      const covered =
+        p.z < 0 &&
+        Math.hypot(Math.max(0, distanceX - halfWidth), Math.max(0, distanceY - halfHeight)) <
+          silhouette;
+      const hidden =
+        covered && Math.hypot(distanceX + halfWidth, distanceY + halfHeight) < silhouette;
+      node.element.dataset.occlusion = hidden ? 'full' : covered ? 'partial' : 'none';
+      if (covered) {
+        // Cut the globe's silhouette out of the rear card. Unlike a CSS mask,
+        // this also excludes the covered pixels from pointer hit testing.
+        const cx = node.width / 2 + (width / 2 - x) / scale;
+        const cy = node.height / 2 + (height / 2 - y) / scale;
+        const r = silhouette / scale;
+        const f = (value: number) => value.toFixed(2);
+        node.button.style.clipPath = `path(evenodd, "M -24 -24 H ${f(node.width + 24)} V ${f(node.height + 24)} H -24 Z M ${f(cx - r)} ${f(cy)} a ${f(r)} ${f(r)} 0 1 0 ${f(r * 2)} 0 a ${f(r)} ${f(r)} 0 1 0 ${f(-r * 2)} 0 Z")`;
+      } else {
+        node.button.style.clipPath = '';
+      }
+      ctx.save();
+      if (p.z < 0) {
+        ctx.beginPath();
+        ctx.rect(0, 0, width, height);
+        ctx.moveTo(width / 2 + silhouette, height / 2);
+        ctx.arc(width / 2, height / 2, silhouette, 0, TAU);
+        ctx.clip('evenodd');
+      }
       ctx.beginPath();
       ctx.moveTo(inside.x, inside.y);
       ctx.lineTo(x, y);
@@ -186,6 +226,7 @@ export function createNetworkScene(
       ctx.arc(inside.x, inside.y, 2, 0, TAU);
       ctx.fillStyle = `rgba(${color},0.65)`;
       ctx.fill();
+      ctx.restore();
     }
     if (animate) frame = requestAnimationFrame(draw);
   }
@@ -200,6 +241,26 @@ export function createNetworkScene(
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    for (const node of satellites) {
+      node.width = node.button.offsetWidth;
+      node.height = node.button.offsetHeight;
+    }
+    schedule();
+  }
+  function focus(event: FocusEvent) {
+    const node = satellites.find((item) => item.button === event.target);
+    if (
+      node &&
+      node.element.dataset.occlusion !== 'none' &&
+      node.button.matches(':focus-visible')
+    ) {
+      // Bring a keyboard-selected rear tool to the front before it is read.
+      const yaw = Math.atan2(-node.position.x, node.position.z);
+      const pitch = Math.atan2(node.position.y, Math.hypot(node.position.x, node.position.z));
+      orientation = multiply(axisRotation('x', pitch), axisRotation('y', yaw));
+      parallax.x = parallax.y = parallax.targetX = parallax.targetY = 0;
+      velocity.x = velocity.y = 0;
+    }
     schedule();
   }
   function down(event: PointerEvent) {
@@ -322,6 +383,14 @@ export function createNetworkScene(
     lastTime = 0;
     schedule();
   }
+  function themeChange() {
+    readPalette();
+    // Finish the canvas palette before View Transitions captures the new page.
+    cancelAnimationFrame(frame);
+    frame = 0;
+    lastTime = 0;
+    draw(performance.now());
+  }
   const resizeObserver = new ResizeObserver(resize);
   const intersection = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
@@ -330,10 +399,11 @@ export function createNetworkScene(
   });
   const themeObserver = new MutationObserver(readPalette);
   resizeObserver.observe(canvas);
+  for (const node of satellites) resizeObserver.observe(node.button);
   intersection.observe(canvas);
   themeObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme'],
+    attributeFilter: ['data-theme', 'data-theme-transition'],
   });
   surface.addEventListener('pointerdown', down);
   surface.addEventListener('pointermove', move, { passive: false });
@@ -345,9 +415,10 @@ export function createNetworkScene(
   surface.addEventListener('pointerleave', leave);
   surface.addEventListener('click', click, true);
   surface.addEventListener('keydown', keyboard);
-  surface.addEventListener('focusin', schedule);
+  surface.addEventListener('focusin', focus);
   surface.addEventListener('focusout', schedule);
   document.addEventListener('visibilitychange', visibility);
+  window.addEventListener('themechange', themeChange);
   readPalette();
   resize();
   return {
@@ -380,9 +451,10 @@ export function createNetworkScene(
       surface.removeEventListener('pointerleave', leave);
       surface.removeEventListener('click', click, true);
       surface.removeEventListener('keydown', keyboard);
-      surface.removeEventListener('focusin', schedule);
+      surface.removeEventListener('focusin', focus);
       surface.removeEventListener('focusout', schedule);
       document.removeEventListener('visibilitychange', visibility);
+      window.removeEventListener('themechange', themeChange);
     },
   };
 }

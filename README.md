@@ -26,7 +26,7 @@ Jalankan `npm run build` sebelum `npm test`. Playwright menjalankan server previ
 ## Pengalaman interaktif
 
 - Globe dengan proyeksi 3D, respons arah kursor, drag dua sumbu, momentum, serta kontrol jeda/reset. Di ponsel, geser horizontal untuk memutar dan vertikal untuk scroll halaman; keyboard mendukung panah serta Home.
-- Delapan node tools ikut berputar bersama globe. Klik untuk membaca fungsi, penggunaan dalam workflow, dan dokumentasi resmi. Rotasi berhenti saat node disorot, difokuskan melalui keyboard, atau panel deskripsi dibaca.
+- Delapan node tools ikut berputar bersama globe dan tertutup bertahap oleh siluet globe saat berada di belakangnya. Klik bagian yang terlihat untuk membaca fungsi, penggunaan dalam workflow, dan dokumentasi resmi. Fokus keyboard membawa tools yang tertutup ke depan. Rotasi berhenti saat node disorot, difokuskan melalui keyboard, atau panel deskripsi dibaca.
 - Light/dark mode dengan animasi lingkaran yang menyebar dari tombol tema. Pilihan tersimpan antar kunjungan; browser tanpa View Transitions memakai gelombang dan transisi warna, sedangkan reduced motion menonaktifkan animasi.
 - Filter proyek dan studi kasus yang terhubung ke repositori serta dokumentasi PDF asli.
 - Panel keahlian dengan navigasi tab melalui keyboard.
@@ -67,7 +67,7 @@ Konten dipisahkan dari tampilan. Satu discriminated union mengelola overlay sehi
 
 Renderer visualisasi dimuat melalui lazy import. Ukuran canvas mengikuti container dengan pixel ratio maksimal 2. Render berkelanjutan berhenti ketika visualisasi tidak terlihat, tab browser tersembunyi, pengguna menjeda, atau reduced motion aktif. Observer, timer, dan event listener dibersihkan saat komponen dilepas. Font di-host bersama aplikasi; halaman tidak membutuhkan CDN font.
 
-Canvas dan tombol tools menggunakan transformasi quaternion yang sama, sehingga orientasi bertahan saat lapisan atau tema berubah. Tombol tetap berupa elemen HTML untuk fokus keyboard dan pembaca layar. Tema dipulihkan sebelum halaman digambar untuk menghindari kilatan palet yang salah saat reload.
+Canvas dan tombol tools menggunakan transformasi quaternion yang sama, sehingga orientasi bertahan saat lapisan atau tema berubah. Clip path mengikuti siluet perspektif globe untuk menutup bagian kartu di belakangnya sekaligus mengecualikan area tersebut dari klik. Tombol tetap berupa elemen HTML untuk fokus keyboard dan pembaca layar. Tema dipulihkan sebelum halaman digambar untuk menghindari kilatan palet yang salah saat reload. Saat transisi tema, canvas mengganti palet sebelum snapshot diambil dan rotasi ditahan sampai snapshot dihapus agar tampilan tidak melompat di akhir animasi.
 
 ## Memperbarui konten
 
